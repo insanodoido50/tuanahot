@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tuana Oyunu</title>
+    
+    <!-- Metatags para compartilhamento -->
+    <meta property="og:title" content="Tuana Oyunu">
+    <meta property="og:description" content="Bir kelime tahmin oyunu. Eğlenmeye hazır mısınız?">
+    <meta property="og:image" content="https://media.tenor.com/unZc11rlGb6AAAAC/monkey-dancing.gif">
+    <meta property="og:url" content="https://seusite.com">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Tuana Oyunu">
+    <meta name="twitter:description" content="Bir kelime tahmin oyunu. Eğlenmeye hazır mısınız?">
+    <meta name="twitter:image" content="https://media.tenor.com/unZc11rlGb6AAAAC/monkey-dancing.gif">
+    
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #6b5b95, #feb236);
+            color: white;
+            text-align: center;
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            animation: fadeIn 2s;
+        }
+
+        .game-container {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            border-radius: 10px;
+            display: inline-block;
+            animation: bounceIn 1s;
+        }
+
+        .word-container {
+            font-size: 2rem;
+            letter-spacing: 5px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .input-container {
+            margin: 20px 0;
+        }
+
+        input {
+            padding: 10px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 5px;
+            text-transform: uppercase;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            background-color: #feb236;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            animation: pulse 2s infinite;
+        }
+
+        button:hover {
+            background-color: #6b5b95;
+        }
+
+        .hint {
+            font-size: 1.5rem;
+            margin-top: 20px;
+        }
+
+        .score {
+            font-size: 1.5rem;
+            margin-top: 20px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .gif-container {
+            margin-top: 30px;
+        }
+
+        .gif-container img {
+            max-width: 500px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tuana Oyunu</h1>
+    <div class="game-container">
+        <p class="word-container" id="wordDisplay">_ _ _ _ _</p>
+        <div class="input-container">
+            <input type="text" id="userInput" maxlength="1" placeholder="Bir harf girin">
+            <button onclick="checkGuess()">Deneyin</button>
+        </div>
+        <p class="hint" id="hint">İpucu: 5 harfli bir kelime</p>
+        <p class="score" id="score">Kalan denemeler: <span id="attempts">5</span></p>
+    </div>
+
+    <div class="gif-container">
+        <img src="https://media.tenor.com/unZc11rlGb6AAAAC/monkey-dancing.gif" alt="Macaco Engraçado">
+    </div>
+
+    <script>
+        const words = ["aslan", "arkadaş", "kitap", "piyano", "çalış"];
+        const selectedWord = words[Math.floor(Math.random() * words.length)];
+        let guessedWord = Array(selectedWord.length).fill("_");
+        let attemptsLeft = 5;
+
+        // Sons
+        const correctSound = new Audio('https://www.soundjay.com/button/beep-07.wav');
+        const incorrectSound = new Audio('https://www.soundjay.com/button/beep-09.wav');
+
+        function updateWordDisplay() {
+            document.getElementById("wordDisplay").innerText = guessedWord.join(" ");
+            document.getElementById("attempts").innerText = attemptsLeft;
+        }
+
+        function checkGuess() {
+            const userInput = document.getElementById("userInput").value.toLowerCase();
+            if (userInput && userInput.length === 1) {
+                let correctGuess = false;
+                for (let i = 0; i < selectedWord.length; i++) {
+                    if (selectedWord[i] === userInput) {
+                        guessedWord[i] = userInput;
+                        correctGuess = true;
+                    }
+                }
+
+                if (correctGuess) {
+                    correctSound.play();
+                } else {
+                    incorrectSound.play();
+                    attemptsLeft--;
+                }
+
+                document.getElementById("userInput").value = "";
+                updateWordDisplay();
+
+                if (guessedWord.join("") === selectedWord) {
+                    setTimeout(() => alert("Kazandınız!"), 200);
+                } else if (attemptsLeft <= 0) {
+                    setTimeout(() => alert("Kaybettiniz! Doğru kelime: " + selectedWord), 200);
+                }
+            }
+        }
+
+        updateWordDisplay();
+    </script>
+</body>
+</html>
